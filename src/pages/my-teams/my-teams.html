@@ -19,8 +19,12 @@
 
 
 <ion-content padding>
-  <p>You are not currently following any teams.</p>
-  <p>First select a tournament, then you can follow teams from their team page.</p>
+  <!--<p>You are not currently following any teams.</p>
+  <p>First select a tournament, then you can follow teams from their team page.</p>-->
+    <ion-list>
+        <button ion-item *ngFor="let item of favorites"></button>
+    </ion-list>
+
   <button ion-button full (click)="goToTournaments()">Find a Tournament</button>
 
 </ion-content>
