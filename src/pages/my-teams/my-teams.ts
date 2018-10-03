@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { TournamentsPage } from '../tournaments/tournaments';
+import { TeamHomePage } from '../team-home/team-home';
+import { EliteApiProvider } from '../../providers/elite-api/elite-api';
 
-/**
- * Generated class for the MyTeamsPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @Component({
   selector: 'page-my-teams',
@@ -33,7 +29,7 @@ export class MyTeamsPage {
     tournamentName: "Holiday Hoops Challenge"
   }];
 
-  constructor(public nav: NavController, public navParams: NavParams) {
+  constructor(public nav: NavController, public navParams: NavParams, private loadingController: LoadingController, private eliteApi: EliteApiProvider) {
   }
 
   ionViewDidLoad() {
@@ -42,6 +38,15 @@ export class MyTeamsPage {
 
   goToTournaments() {
     this.nav.push(TournamentsPage);
+  }
+
+  favoriteTapped($event, favorite) {
+    let loader = this.loadingController.create({
+      content: 'Getting data..',
+      dismissOnPageChange: true
+    });
+    loader.present();
+    this.eliteApi.getTournamentData(favorite.tournamentId).subscribe(t => this.nav.push(TeamHomePage, favorite.team));
   }
 
 }

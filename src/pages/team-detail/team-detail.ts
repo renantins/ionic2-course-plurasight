@@ -4,6 +4,7 @@ import { MyTeamsPage } from '../my-teams/my-teams';
 import { EliteApiProvider } from '../../providers/elite-api/elite-api';
 import * as _ from 'lodash';
 import { GamePage } from '../game/game';
+import moment from 'moment';
 
 @Component({
   selector: 'page-team-detail',
@@ -13,7 +14,11 @@ export class TeamDetailPage {
 
   public team: any = {};
   public games: any[];
+  public dateFilter: string;
   private tourneyData: any;
+  private teamStanding:any = {};
+  private allGames:any[];
+  public useDateFilter: boolean = false;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, private eliteApi: EliteApiProvider) {
 
@@ -38,6 +43,16 @@ export class TeamDetailPage {
         homeAway: (isTeam1 ? "vs." : "at"),
       }
     }).value()
+    this.allGames = this.games;
+    this.teamStanding = _.find(this.tourneyData.standings,{'teamId':this.team.id})
+  }
+
+  dateChanged(){
+    if (this.useDateFilter) {
+      this.games = _.filter(this.allGames, g => moment(g.time).isSame(this.dateFilter,'day'))
+    } else {
+      this.games = this.allGames;
+    }
   }
 
   getScoreDisplay(isTeam1, team1Score, team2Score){
@@ -54,6 +69,14 @@ export class TeamDetailPage {
   gameClicked($event, game){
     let sourceGame = this.tourneyData.games.find(g => g.id === game.gameId);
     this.navCtrl.parent.parent.push(GamePage, sourceGame);
+  }
+
+  getScoreWorL(game){
+    return game.scoreDisplay ? game.scoreDisplay[0] : '';
+  }
+
+  getScoreDisplayBadgeClass(game){
+    return game.scoreDisplay.indexOf('W') === 0 ? 'primary' : 'danger';
   }
 
 }

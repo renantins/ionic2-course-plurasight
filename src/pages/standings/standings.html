@@ -14,5 +14,59 @@
 
 
 <ion-content padding>
-  <h2>Standings</h2>
+  <ion-list>
+    <ion-item-group *ngFor="let division of allStandings">
+      <ion-item-divider color="secondary">{{division.divisionName}}</ion-item-divider>
+
+      <ion-item *ngFor="let team of division.divisionStandings">
+          <ion-row>
+            <ion-col>
+              <h2 ion-text color="primary">{{team.teamName}}</h2>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <h4>Wins</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Losses</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Pct</h4>
+            </ion-col>
+            <ion-col>
+              <h4>PF</h4>
+            </ion-col>
+            <ion-col>
+              <h4>PA</h4>
+            </ion-col>
+            <ion-col>
+              <h4>Diff</h4>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <h5>{{team.wins}}</h5>
+            </ion-col>
+            <ion-col>
+              <h5>{{team.losses}}</h5>
+            </ion-col>
+            <ion-col>
+              <h5>{{team.winningPct}}</h5>
+            </ion-col>
+            <ion-col>
+              <h5>{{team.pointsFor}}</h5>
+            </ion-col>
+            <ion-col>
+              <h5>{{team.pointsAgainst}}</h5>
+            </ion-col>
+            <ion-col>
+              <h5>{{team.pointsDiff}}</h5>
+            </ion-col>
+          </ion-row>
+        </ion-item>
+
+    </ion-item-group>
+   
+  </ion-list>
 </ion-content>
