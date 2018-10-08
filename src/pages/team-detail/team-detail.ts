@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
+import { NavController, NavParams, AlertController, ToastController, Refresher } from 'ionic-angular';
 import { MyTeamsPage } from '../my-teams/my-teams';
 import { EliteApiProvider } from '../../providers/elite-api/elite-api';
 import * as _ from 'lodash';
 import { GamePage } from '../game/game';
 import moment from 'moment';
+import { UserSettingsProvider } from '../../providers/user-settings/user-settings';
 
 @Component({
   selector: 'page-team-detail',
@@ -20,8 +21,7 @@ export class TeamDetailPage {
   private allGames:any[];
   public useDateFilter = false;
   public isFollowing = false;
-
-  constructor(public navCtrl: NavController, public navParams: NavParams, private eliteApi: EliteApiProvider, private alertController: AlertController, private toastController: ToastController) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private eliteApi: EliteApiProvider, private alertController: AlertController, private toastController: ToastController, private userSettingsProvider: UserSettingsProvider) {
 
   }
 
@@ -45,7 +45,8 @@ export class TeamDetailPage {
       }
     }).value()
     this.allGames = this.games;
-    this.teamStanding = _.find(this.tourneyData.standings,{'teamId':this.team.id})
+    this.teamStanding = _.find(this.tourneyData.standings,{'teamId':this.team.id});
+    this.userSettingsProvider.isFavoriteTeam(this.team.id.toString()).then(value => this.isFollowing = value);
   }
 
   dateChanged(){
@@ -89,6 +90,7 @@ export class TeamDetailPage {
             text:'yes',
             handler: () => {
               this.isFollowing = false;
+              this.userSettingsProvider.unfavoriteTeam(this.team);
               let toast = this.toastController.create({
                 message:"You unfollowed this team",
                 duration: 3000,
@@ -103,7 +105,16 @@ export class TeamDetailPage {
         confirm.present();
       }else {
         this.isFollowing = true;
+        this.userSettingsProvider.favoriteTeam(this.team, this.tourneyData.tournament.id, this.tourneyData.tournament.name);
+        
       }
+  }
+
+  refreshAll(refresher){
+    this.eliteApi.refreshCurrentTourney().subscribe(() => {
+      refresher.complete();
+      this.ionViewDidLoad();
+    });
   }
 
 }
