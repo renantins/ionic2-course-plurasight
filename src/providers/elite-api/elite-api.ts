@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import  'rxjs/add/operator/map';
-import { Observable} from 'rxjs';
+import { Observable} from 'rxjs/Observable';
+import  'rxjs/add/observable/of';
 
 @Injectable()
 export class EliteApiProvider {
@@ -26,7 +27,7 @@ export class EliteApiProvider {
     })
   }*/
 
-  getTournamentData(tourneyId, forceRefresh): Observable<any>{
+  getTournamentData(tourneyId, forceRefresh: boolean = false): Observable<any>{
     if(!forceRefresh && this.tourneyData[tourneyId]){
       this.currentTourney = this.tourneyData[tourneyId];
       console.log("** no need to make HTTP call, just return the data");
@@ -39,10 +40,10 @@ export class EliteApiProvider {
       this.currentTourney = this.tourneyData[tourneyId];
         return this.currentTourney;
     })
-    
   }
 
   refreshCurrentTourney(){
+    console.log("ID Tourney "+this.currentTourney.tournament.id);
     return this.getTournamentData(this.currentTourney.tournament.id, true);
   }
 

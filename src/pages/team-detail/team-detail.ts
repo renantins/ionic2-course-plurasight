@@ -21,6 +21,7 @@ export class TeamDetailPage {
   private allGames:any[];
   public useDateFilter = false;
   public isFollowing = false;
+
   constructor(public navCtrl: NavController, public navParams: NavParams, private eliteApi: EliteApiProvider, private alertController: AlertController, private toastController: ToastController, private userSettingsProvider: UserSettingsProvider) {
 
   }
@@ -106,7 +107,6 @@ export class TeamDetailPage {
       }else {
         this.isFollowing = true;
         this.userSettingsProvider.favoriteTeam(this.team, this.tourneyData.tournament.id, this.tourneyData.tournament.name);
-        
       }
   }
 
