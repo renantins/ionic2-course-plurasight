@@ -60,4 +60,5 @@ export class MyApp {
   refreshFavorites(){
     this.favoriteTeams = this.userSettings.getAllFavorites();
   }
+  
 }
